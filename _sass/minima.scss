@@ -71,3 +71,13 @@ input, select {
 .site-title {
   font-family: 'Playfair Display', serif;
 }
+
+ol > li {
+  margin: 10px 0px;
+}
+
+img {
+  margin: 30px auto;
+  display: block;
+  max-width: 600px;
+}
