@@ -79,6 +79,8 @@ comments: true
         of my savings to the market.</li>
 </ul>
 
+<h1>Results</h1>
+
 <ul>
     <li>To retire in <span id="stateResult"></span> at age 65, you would need to have $<span id="reqsave"></span>
         available.</li>
@@ -90,6 +92,8 @@ comments: true
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
 </script>
 <script>
+    Chart.defaults.global.defaultFontColor = "#fff";
+
     var data = ([
         {
             "State": "Hawaii",
