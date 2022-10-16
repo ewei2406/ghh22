@@ -1,0 +1,587 @@
+---
+layout: default
+title: Retirement Planner
+comments: true
+---
+
+<h1>
+    Retirement planner
+</h1>
+
+<ul>
+    <li>I am <input type="number" id="age" name="age" min="1" max="100" value="21"> years old.</li>
+    <li>
+        I have an annual income of $<input type="number" id="income" name="income" min="0" max="100000000" step="5000"
+            value="75000">
+    </li>
+    <li>I have $<input type="number" id="saved" name="saved" min="0" max="100000000" step="5000" value="10000"> in
+        savings.</li>
+    <li>
+        I plan to retire in <select id="state">
+            <option value="Alabama">Alabama</option>
+            <option value="Alaska">Alaska</option>
+            <option value="Arizona">Arizona</option>
+            <option value="Arkansas">Arkansas</option>
+            <option value="California">California</option>
+            <option value="Colorado">Colorado</option>
+            <option value="Connecticut">Connecticut</option>
+            <option value="Delaware">Delaware</option>
+            <option value="District of Columbia">District of Columbia</option>
+            <option value="Florida">Florida</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Guam">Guam</option>
+            <option value="Hawaii">Hawaii</option>
+            <option value="Idaho">Idaho</option>
+            <option value="Illinois">Illinois</option>
+            <option value="Indiana">Indiana</option>
+            <option value="Iowa">Iowa</option>
+            <option value="Kansas">Kansas</option>
+            <option value="Kentucky">Kentucky</option>
+            <option value="Louisiana">Louisiana</option>
+            <option value="Maine">Maine</option>
+            <option value="Maryland">Maryland</option>
+            <option value="Massachusetts">Massachusetts</option>
+            <option value="Michigan">Michigan</option>
+            <option value="Minnesota">Minnesota</option>
+            <option value="Mississippi">Mississippi</option>
+            <option value="Missouri">Missouri</option>
+            <option value="Montana">Montana</option>
+            <option value="Nebraska">Nebraska</option>
+            <option value="Nevada">Nevada</option>
+            <option value="New Hampshire">New Hampshire</option>
+            <option value="New Jersey">New Jersey</option>
+            <option value="New Mexico">New Mexico</option>
+            <option value="New York">New York</option>
+            <option value="North Carolina">North Carolina</option>
+            <option value="North Dakota">North Dakota</option>
+            <option value="Northern Marianas Islands">Northern Marianas Islands</option>
+            <option value="Ohio">Ohio</option>
+            <option value="Oklahoma">Oklahoma</option>
+            <option value="Oregon">Oregon</option>
+            <option value="Pennsylvania">Pennsylvania</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="Rhode Island">Rhode Island</option>
+            <option value="South Carolina">South Carolina</option>
+            <option value="South Dakota">South Dakota</option>
+            <option value="Tennessee">Tennessee</option>
+            <option value="Texas">Texas</option>
+            <option value="Utah">Utah</option>
+            <option value="Vermont">Vermont</option>
+            <option value="Virginia">Virginia</option>
+            <option value="Virgin Islands">Virgin Islands</option>
+            <option value="Washington">Washington</option>
+            <option value="West Virginia">West Virginia</option>
+            <option value="Wisconsin">Wisconsin</option>
+            <option value="Wyoming">Wyoming</option>
+        </select>
+    </li>
+    <li>I would like to allocate <input type="number" id="invest" name="invest" min="0" max="100" step="1" value="50">%
+        of my savings to the market.</li>
+</ul>
+
+<ul>
+    <li>To retire in <span id="stateResult"></span> at age 65, you would need to have $<span id="reqsave"></span>
+        available.</li>
+    <li>At your age and with your savings, you need to save $<span id="numsave"></span> per year, or <span
+            id="pct"></span>% of your income each year.</li>
+    <canvas id="results" style="width:100%;max-width:700px"></canvas>
+</ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+<script>
+    var data = ([
+        {
+            "State": "Hawaii",
+            "savingsRequired": 1844556,
+            "avgAge": 66,
+            "lifeExp": "80.7000",
+            "yearlyExpenses": 99170
+        },
+        {
+            "State": "California",
+            "savingsRequired": 1456286,
+            "avgAge": 64,
+            "lifeExp": 79,
+            "yearlyExpenses": 71809
+        },
+        {
+            "State": "New York",
+            "savingsRequired": 1408121,
+            "avgAge": 64,
+            "lifeExp": "77.7000",
+            "yearlyExpenses": 69847
+        },
+        {
+            "State": "Alaska",
+            "savingsRequired": 1341805,
+            "avgAge": 61,
+            "lifeExp": "76.6000",
+            "yearlyExpenses": 66956
+        },
+        {
+            "State": "Oregon",
+            "savingsRequired": 1335752,
+            "avgAge": 63,
+            "lifeExp": "78.8000",
+            "yearlyExpenses": 68712
+        },
+        {
+            "State": "Connecticut",
+            "savingsRequired": 1245691,
+            "avgAge": 65,
+            "lifeExp": "78.4000",
+            "yearlyExpenses": 66543
+        },
+        {
+            "State": "New Jersey",
+            "savingsRequired": 1204099,
+            "avgAge": 65,
+            "lifeExp": "77.5000",
+            "yearlyExpenses": 64736
+        },
+        {
+            "State": "Massachusetts",
+            "savingsRequired": 1155581,
+            "avgAge": 66,
+            "lifeExp": 79,
+            "yearlyExpenses": 69279
+        },
+        {
+            "State": "Maryland",
+            "savingsRequired": 1113071,
+            "avgAge": 65,
+            "lifeExp": "76.8000",
+            "yearlyExpenses": 67214
+        },
+        {
+            "State": "Maine",
+            "savingsRequired": 1089989,
+            "avgAge": 63,
+            "lifeExp": "77.8000",
+            "yearlyExpenses": 60555
+        },
+        {
+            "State": "Washington",
+            "savingsRequired": 1085454,
+            "avgAge": 64,
+            "lifeExp": "79.2000",
+            "yearlyExpenses": 56890
+        },
+        {
+            "State": "Vermont",
+            "savingsRequired": 1079030,
+            "avgAge": 65,
+            "lifeExp": "78.8000",
+            "yearlyExpenses": 60348
+        },
+        {
+            "State": "Rhode Island",
+            "savingsRequired": 1071014,
+            "avgAge": 65,
+            "lifeExp": "78.2000",
+            "yearlyExpenses": 62413
+        },
+        {
+            "State": "Delaware",
+            "savingsRequired": 1008477,
+            "avgAge": 63,
+            "lifeExp": "76.7000",
+            "yearlyExpenses": 55289
+        },
+        {
+            "State": "Nevada",
+            "savingsRequired": 1007957,
+            "avgAge": 63,
+            "lifeExp": "76.3000",
+            "yearlyExpenses": 56373
+        },
+        {
+            "State": "Arizona",
+            "savingsRequired": 1007349,
+            "avgAge": 63,
+            "lifeExp": "76.3000",
+            "yearlyExpenses": 52140
+        },
+        {
+            "State": "Minnesota",
+            "savingsRequired": 991075,
+            "avgAge": 65,
+            "lifeExp": "79.1000",
+            "yearlyExpenses": 52605
+        },
+        {
+            "State": "Colorado",
+            "savingsRequired": 977496,
+            "avgAge": 65,
+            "lifeExp": "78.3000",
+            "yearlyExpenses": 54670
+        },
+        {
+            "State": "New Hampshire",
+            "savingsRequired": 946850,
+            "avgAge": 65,
+            "lifeExp": 79,
+            "yearlyExpenses": 55960
+        },
+        {
+            "State": "Florida",
+            "savingsRequired": 927008,
+            "avgAge": 64,
+            "lifeExp": "77.5000",
+            "yearlyExpenses": 51159
+        },
+        {
+            "State": "Wisconsin",
+            "savingsRequired": 924679,
+            "avgAge": 64,
+            "lifeExp": "77.7000",
+            "yearlyExpenses": 49714
+        },
+        {
+            "State": "Virginia",
+            "savingsRequired": 884833,
+            "avgAge": 65,
+            "lifeExp": "77.6000",
+            "yearlyExpenses": 52295
+        },
+        {
+            "State": "New Mexico",
+            "savingsRequired": 883291,
+            "avgAge": 62,
+            "lifeExp": "74.5000",
+            "yearlyExpenses": 47184
+        },
+        {
+            "State": "Illinois",
+            "savingsRequired": 882770,
+            "avgAge": 64,
+            "lifeExp": "76.8000",
+            "yearlyExpenses": 49043
+        },
+        {
+            "State": "Utah",
+            "savingsRequired": 872580,
+            "avgAge": 65,
+            "lifeExp": "78.6000",
+            "yearlyExpenses": 50850
+        },
+        {
+            "State": "Idaho",
+            "savingsRequired": 871620,
+            "avgAge": 64,
+            "lifeExp": "78.4000",
+            "yearlyExpenses": 48423
+        },
+        {
+            "State": "North Carolina",
+            "savingsRequired": 865499,
+            "avgAge": 63,
+            "lifeExp": "76.1000",
+            "yearlyExpenses": 48733
+        },
+        {
+            "State": "Michigan",
+            "savingsRequired": 864929,
+            "avgAge": 62,
+            "lifeExp": 76,
+            "yearlyExpenses": 46203
+        },
+        {
+            "State": "Pennsylvania",
+            "savingsRequired": 856876,
+            "avgAge": 64,
+            "lifeExp": "76.8000",
+            "yearlyExpenses": 51005
+        },
+        {
+            "State": "Montana",
+            "savingsRequired": 839096,
+            "avgAge": 64,
+            "lifeExp": "76.8000",
+            "yearlyExpenses": 54205
+        },
+        {
+            "State": "Wyoming",
+            "savingsRequired": 824062,
+            "avgAge": 64,
+            "lifeExp": "76.3000",
+            "yearlyExpenses": 49404
+        },
+        {
+            "State": "North Dakota",
+            "savingsRequired": 823764,
+            "avgAge": 65,
+            "lifeExp": "76.9000",
+            "yearlyExpenses": 50850
+        },
+        {
+            "State": "Iowa",
+            "savingsRequired": 820698,
+            "avgAge": 65,
+            "lifeExp": "77.5000",
+            "yearlyExpenses": 47494
+        },
+        {
+            "State": "Nebraska",
+            "savingsRequired": 806220,
+            "avgAge": 65,
+            "lifeExp": "77.7000",
+            "yearlyExpenses": 47649
+        },
+        {
+            "State": "Georgia",
+            "savingsRequired": 796984,
+            "avgAge": 63,
+            "lifeExp": "75.6000",
+            "yearlyExpenses": 46771
+        },
+        {
+            "State": "West Virginia",
+            "savingsRequired": 787357,
+            "avgAge": 61,
+            "lifeExp": "72.8000",
+            "yearlyExpenses": 47546
+        },
+        {
+            "State": "Indiana",
+            "savingsRequired": 784891,
+            "avgAge": 63,
+            "lifeExp": 75,
+            "yearlyExpenses": 46720
+        },
+        {
+            "State": "South Carolina",
+            "savingsRequired": 784197,
+            "avgAge": 63,
+            "lifeExp": "74.8000",
+            "yearlyExpenses": 49507
+        },
+        {
+            "State": "Louisiana",
+            "savingsRequired": 776987,
+            "avgAge": 62,
+            "lifeExp": "73.1000",
+            "yearlyExpenses": 48320
+        },
+        {
+            "State": "Ohio",
+            "savingsRequired": 776788,
+            "avgAge": 63,
+            "lifeExp": "75.3000",
+            "yearlyExpenses": 47597
+        },
+        {
+            "State": "Missouri",
+            "savingsRequired": 771281,
+            "avgAge": 63,
+            "lifeExp": "75.1000",
+            "yearlyExpenses": 45584
+        },
+        {
+            "State": "Texas",
+            "savingsRequired": 765223,
+            "avgAge": 65,
+            "lifeExp": "76.5000",
+            "yearlyExpenses": 47236
+        },
+        {
+            "State": "Kentucky",
+            "savingsRequired": 738492,
+            "avgAge": 62,
+            "lifeExp": "73.5000",
+            "yearlyExpenses": 47339
+        },
+        {
+            "State": "South Dakota",
+            "savingsRequired": 738337,
+            "avgAge": 66,
+            "lifeExp": "76.7000",
+            "yearlyExpenses": 50850
+        },
+        {
+            "State": "Kansas",
+            "savingsRequired": 732681,
+            "avgAge": 65,
+            "lifeExp": "76.4000",
+            "yearlyExpenses": 46255
+        },
+        {
+            "State": "Arkansas",
+            "savingsRequired": 728010,
+            "avgAge": 62,
+            "lifeExp": "73.8000",
+            "yearlyExpenses": 45274
+        },
+        {
+            "State": "Oklahoma",
+            "savingsRequired": 723859,
+            "avgAge": 62,
+            "lifeExp": "74.1000",
+            "yearlyExpenses": 45016
+        },
+        {
+            "State": "Alabama",
+            "savingsRequired": 712832,
+            "avgAge": 62,
+            "lifeExp": "73.2000",
+            "yearlyExpenses": 46049
+        },
+        {
+            "State": "Tennessee",
+            "savingsRequired": 660870,
+            "avgAge": 64,
+            "lifeExp": "73.8000",
+            "yearlyExpenses": 45894
+        },
+        {
+            "State": "Mississippi",
+            "savingsRequired": 617661,
+            "avgAge": 63,
+            "lifeExp": "71.9000",
+            "yearlyExpenses": 44758
+        }
+    ])
+
+    const update = () => {
+        console.log('here')
+        set(
+            document.getElementById('state').value,
+            document.getElementById('income').value,
+            document.getElementById('saved').value,
+            document.getElementById('age').value,
+            document.getElementById('invest').value
+        )
+    }
+
+    function addData(chart, data) {
+            chart.data = data
+            chart.update();
+        }
+
+    function removeData(chart) {
+            chart.data.labels.pop();
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+            });
+            chart.update();
+        }
+
+    var myChart = new Chart("results", {
+            type: "line",
+            data: {},
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function (data, data2, data3) {
+                            let value = data.value
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join(',');
+                            return '$' + value;
+                        }
+                    } // end callbacks:
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            userCallback: function (value, index, values) {
+                                value = value.toString();
+                                value = value.split(/(?=(?:...)*$)/);
+                                value = value.join(',');
+                                return '$' + value;
+                            }
+                        }
+                    }]
+                }
+            }
+        });
+
+    const set = (state, income, savings, age, invest) => {
+        removeData(myChart)
+        document.getElementById('stateResult').innerText = state;
+
+        const retAmt = data.filter(d => d.State === state)[0].savingsRequired;
+        document.getElementById('reqsave').innerText = retAmt;
+
+        savings = Number(savings);
+        invest = Number(invest) / 100
+        const neededIncome = retAmt - Number(savings);
+        const years = 65 - Number(age);
+        const ay = Number(neededIncome / years);
+        document.getElementById('numsave').innerText = Math.floor(ay);
+        const pct = ay / income;
+        document.getElementById('pct').innerText = Math.floor(pct * 100);
+
+        console.log(ay, pct)
+        let lowStock = 0
+        let midStock = 0
+        let notSaved = savings
+        let highStock = 0
+
+        let chartData = {
+            labels: Array.apply(null, Array(65 - age)).map(function (_, i) { return i + Number(age); }),
+            datasets: [
+                {
+                    label: 'Without investment', data: [], fill: false,
+                    borderColor: '#B5E9D7',
+                },
+                {
+                    label: 'Slow market (3% growth)', data: [], fill: false,
+                    borderColor: '#FFB7B2',
+                },
+                {
+                    label: 'Regular market (6% growth)', data: [], fill: false,
+                    borderColor: '#FFD9C1',
+                },
+                {
+                    label: 'Fast market (9% growth)', data: [], fill: false,
+                    borderColor: 'rgb(226,240,202)',
+                },
+            ]
+        }
+        for (let i = age; i <= 65; i++) {
+            // lines.append({
+            //     age: i,
+            //     saved: savings,
+            //     lowStock: lowStock,
+            //     midStock: midStock,
+            //     highStock: highStock,
+            // })
+
+            chartData.datasets[0].data.push(Math.round(savings))
+            chartData.datasets[1].data.push(Math.round(lowStock + notSaved))
+            chartData.datasets[2].data.push(Math.round(midStock + notSaved))
+            chartData.datasets[3].data.push(Math.round(highStock + notSaved))
+
+            savings += ay;
+            notSaved += ay * (1 - invest)
+            let stock = Number(ay) * Number(invest)
+            lowStock += stock;
+            lowStock *= 1.03;
+
+            midStock += stock;
+            midStock *= 1.06
+            highStock += stock;
+            highStock *= 1.09;
+        }
+        console.log(chartData)
+
+        addData(myChart, chartData)
+    }
+
+    var stateDrop = document.getElementById('state')
+    update();
+
+    stateDrop.onchange = (e) => {
+        update();
+    }
+
+    document.getElementById('state').onchange = update
+    document.getElementById('income').onchange = update
+    document.getElementById('saved').onchange = update
+    document.getElementById('invest').onchange = update
+        document.getElementById('age').onchange = update
+
+</script>
